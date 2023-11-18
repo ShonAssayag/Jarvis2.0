@@ -1,0 +1,53 @@
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore environment-specific settings and virtual environments
+.env
+venv/
+env/
+*.env
+
+# Ignore local development settings
+*.log
+*.sqlite3
+
+# Ignore system and hidden files
+.DS_Store
+Thumbs.db
+
+# Ignore dependency folders and files
+__pycache__/
+*.egg-info/
+dist/
+build/
+*.egg
+*.egg-info
+pip-wheel-metadata/
+*.swp
+
+# Ignore IDE-specific files and directories
+.idea/
+.vscode/
+*.code-workspace
+
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore database files
+*.sqlite3
+
+# Ignore cache files
+__pycache__/
+
+# Ignore user-specific files
+*.bak
+*.tmp
+
+# Ignore compiled files
+*.pyc
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/

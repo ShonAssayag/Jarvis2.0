@@ -4,7 +4,8 @@ import uvicorn
 from bson import ObjectId
 from fastapi import FastAPI
 
-from src.clusters.clusters_api import cluster_router
+from src.clusters.mongodb.mongodb_api import mongodb_cluster_router
+from src.clusters.redis.redis_api import redis_cluster_router
 
 
 class ObjectIdJSONEncoder(JSONEncoder):
@@ -19,7 +20,8 @@ app = FastAPI()
 
 app.json_encoder = ObjectIdJSONEncoder
 
-app.include_router(cluster_router)
+app.include_router(mongodb_cluster_router)
+app.include_router(redis_cluster_router)
 
 
 @app.get("/")
