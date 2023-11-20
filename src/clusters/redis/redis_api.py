@@ -6,7 +6,7 @@ from starlette.responses import PlainTextResponse
 import src.clusters.redis.redis_cluster as redis_cluster
 from src.clusters.models import RedisCluster
 
-redis_cluster_router = APIRouter(prefix='/redis/cluster', tags=['Make Redis Cluster Actions'])
+redis_cluster_router = APIRouter(prefix='/redis/cluster', tags=['Redis Cluster Actions'])
 
 
 @redis_cluster_router.post('/')

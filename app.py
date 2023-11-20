@@ -22,13 +22,13 @@ app = FastAPI()
 app.json_encoder = ObjectIdJSONEncoder
 
 app.include_router(mongodb_cluster_router)
-app.include_router(redis_cluster_router)
 app.include_router(mongodb_database_router)
+app.include_router(redis_cluster_router)
 
 
 @app.get("/")
 async def root():
-    return "Nothing to see here:)"
+    return "Nothing To See Here:)"
 
 
 if __name__ == '__main__':

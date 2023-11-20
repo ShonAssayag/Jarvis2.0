@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, HTTPException
 import src.databases.mongodb.mongodb_database as mongodb_database
 from src.databases.models import MongoDBDatabase
 
-mongodb_database_router = APIRouter(prefix='/mongodb/database', tags=['Make MongoDB Database Actions'])
+mongodb_database_router = APIRouter(prefix='/mongodb/database', tags=['MongoDB Database Actions'])
 
 
 @mongodb_database_router.post('/')
@@ -20,12 +20,12 @@ async def add_database(cluster_name: str, database: MongoDBDatabase = Body(...))
 
 
 @mongodb_database_router.delete('/')
-async def delete_cluster_by_name(name):
+async def delete_database_by_name(cluster_name: str, database_name: str):
     try:
-        cluster = mongodb_database.delete_cluster_by_name(name)
-        if cluster:
-            cluster['_id'] = str(cluster['_id'])
-            return JSONResponse(content=jsonable_encoder(cluster), status_code=200)
+        database = mongodb_database.delete_database_by_name(cluster_name, database_name)
+        if database:
+            database['_id'] = str(database['_id'])
+            return JSONResponse(content=jsonable_encoder(database), status_code=200)
         else:
             return PlainTextResponse(content="No Cluster Found", status_code=404)
     except HTTPException as e:
@@ -33,9 +33,9 @@ async def delete_cluster_by_name(name):
 
 
 @mongodb_database_router.get('/')
-async def get_database_by_name(name):
+async def get_database_by_name(cluster_name: str, database_name: str):
     try:
-        database = mongodb_database.get_database_by_name(name)
+        database = mongodb_database.get_database_by_name(cluster_name, database_name)
         if database:
             database['_id'] = str(database['_id'])
             return JSONResponse(content=jsonable_encoder(database), status_code=200)

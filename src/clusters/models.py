@@ -1,5 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, field_validator
+from src.databases.models import User
 
 
 class Host(BaseModel):
@@ -23,8 +24,10 @@ class Cluster(BaseModel):
     version: str
     creation_time: datetime
     last_update: datetime
-    admin_credentials: dict
+    admin_credentials: User
     region: str
+    responsible_team: str
+    responsible_user: str
 
     @field_validator('creation_time', 'last_update', mode='before')
     def parse_date(cls, value):

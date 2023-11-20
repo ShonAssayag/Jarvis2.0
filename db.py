@@ -4,30 +4,15 @@ from pymongo.server_api import ServerApi
 
 
 class MongodbConnection:
-    def __init__(self, connection_uri: str, max_connections: int = 10):
+    def __init__(self, connection_uri: str):
         self.connection_uri = connection_uri
-        self.max_connections = max_connections
-        self.connection_pool = []
-        self.current_connection = 0
 
     def get_connection(self):
-        if self.current_connection >= self.max_connections:
-            self.current_connection = 0
-        if len(self.connection_pool) < self.max_connections:
-            try:
-                client = MongoClient(self.connection_uri, server_api=ServerApi('1'))
-                self.connection_pool.append(client)
-                self.current_connection += 1
-                return client
-            except ConnectionFailure as e:
-                raise Exception("Failed to connect to MongoDB server:", e)
-        else:
-            self.current_connection += 1
-            return self.connection_pool[self.current_connection - 1]
-
-    def close_all_connections(self):
-        for connection in self.connection_pool:
-            connection.close()
+        try:
+            client = MongoClient(self.connection_uri, server_api=ServerApi('1'))
+            return client
+        except ConnectionFailure as e:
+            raise Exception("Failed to connect to MongoDB server:", e)
 
     def get_database(self, database_name):
         client = self.get_connection()

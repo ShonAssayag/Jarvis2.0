@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, HTTPException
 import src.clusters.mongodb.mongodb_cluster as mongodb_cluster
 from src.clusters.models import MongoDBCluster
 
-mongodb_cluster_router = APIRouter(prefix='/mongodb/cluster', tags=['Make MongoDB Cluster Actions'])
+mongodb_cluster_router = APIRouter(prefix='/mongodb/cluster', tags=['MongoDB Cluster Actions'])
 
 
 @mongodb_cluster_router.post('/')

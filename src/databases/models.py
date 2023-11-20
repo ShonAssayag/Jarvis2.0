@@ -34,6 +34,8 @@ class Database(BaseModel):
     name: str
     creation_time: datetime
     last_update: datetime
+    responsible_team: str
+    responsible_user: str
 
     @field_validator('creation_time', 'last_update', mode='before')
     def parse_date(cls, value):
