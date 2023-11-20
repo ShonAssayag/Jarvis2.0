@@ -2,6 +2,21 @@ from datetime import datetime
 from pydantic import BaseModel, field_validator
 
 
+class Host(BaseModel):
+    name: str
+    dns: str
+    resources: dict
+
+
+class MongoDBHost(Host):
+    port: int
+    type: str  # standalone, replicaMember,config, mongos, shard0:replicaMember
+
+
+class RedisHost(Host):
+    pass
+
+
 class Cluster(BaseModel):
     name: str
     env: str
@@ -10,10 +25,9 @@ class Cluster(BaseModel):
     last_update: datetime
     admin_credentials: dict
     region: str
-    hosts: list[dict]
 
     @field_validator('creation_time', 'last_update', mode='before')
-    def parse_birthdate(cls, value):
+    def parse_date(cls, value):
         return datetime.strptime(
             value,
             "%Y-%m-%dT%H:%M:%S.%fZ"
@@ -21,13 +35,15 @@ class Cluster(BaseModel):
 
 
 class MongoDBCluster(Cluster):
+    hosts: list[MongoDBHost]
     is_tls: bool
     auth_mechanism: str
     mms_group_id: str
     architecture: str
-    databases: list[dict]
+    databases: list[str]  # database_names
 
 
 class RedisCluster(Cluster):
+    hosts: list[RedisHost]
     total_memory: float
     allocated_memory: float
