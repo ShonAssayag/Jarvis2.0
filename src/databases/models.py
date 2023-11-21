@@ -47,10 +47,11 @@ class Database(BaseModel):
 
 class MongoDBDatabase(Database):
     users: list[MongoDBUser]
+    cluster_name: str
 
 
 class RedisDatabase(Database):
-    id: str
+    bdb_id: str
     max_memory: float
     num_shards: int
     replication: bool

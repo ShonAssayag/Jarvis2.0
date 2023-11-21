@@ -28,6 +28,7 @@ class Cluster(BaseModel):
     region: str
     responsible_team: str
     responsible_user: str
+    databases: list[str]  # database_names
 
     @field_validator('creation_time', 'last_update', mode='before')
     def parse_date(cls, value):
@@ -43,7 +44,6 @@ class MongoDBCluster(Cluster):
     auth_mechanism: str
     mms_group_id: str
     architecture: str
-    databases: list[str]  # database_names
 
 
 class RedisCluster(Cluster):

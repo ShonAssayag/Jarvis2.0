@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from src.clusters.mongodb.mongodb_api import mongodb_cluster_router
 from src.clusters.redis.redis_api import redis_cluster_router
 from src.databases.mongodb.mongodb_api import mongodb_database_router
+from src.databases.redis.redis_api import redis_database_router
 
 
 class ObjectIdJSONEncoder(JSONEncoder):
@@ -24,6 +25,7 @@ app.json_encoder = ObjectIdJSONEncoder
 app.include_router(mongodb_cluster_router)
 app.include_router(mongodb_database_router)
 app.include_router(redis_cluster_router)
+app.include_router(redis_database_router)
 
 
 @app.get("/")

@@ -1,7 +1,7 @@
 from src.utils.init_db_conn import jarvis_db as db, cluster_connection
 from src.utils.init_db_conn import get_transaction_connection
 
-collection = db.get_collection('mongodb_databases')
+collection = db.get_collection('redis_databases')
 
 
 @cluster_connection.handle_exceptions
@@ -9,14 +9,13 @@ def add_database(database: dict):
     transaction_connection = get_transaction_connection()
 
     def callback(session):
-        clusters_collection = session.client.Jarvis.mongodb_clusters
-
-        database_collection = session.client.Jarvis.mongodb_databases
-
+        clusters_collection = session.client.Jarvis.redis_clusters
+        database_collection = session.client.Jarvis.redis_databases
         cluster_result = clusters_collection.find_one_and_update(
-            {"name": database['cluster_name']},
+            {"name": {"$in": database['participating_clusters']}},
             {
                 "$push": {"databases": database['name']},
+                "$inc": {"allocated_memory": database['max_memory']}
             },
             session=session,
         )
@@ -36,14 +35,14 @@ def delete_database_by_name(cluster_name: str, database_name: str):
     transaction_connection = get_transaction_connection()
 
     def callback(session):
-        clusters_collection = session.client.Jarvis.mongodb_clusters
-
-        database_collection = session.client.Jarvis.mongodb_databases
-
+        clusters_collection = session.client.Jarvis.redis_clusters
+        database_collection = session.client.Jarvis.redis_databases
+        database_max_memory = float(database_collection.find_one({"name": database_name}, {"_id": 0, "max_memory": 1})['max_memory'])
         cluster_result = clusters_collection.find_one_and_update(
             {"name": cluster_name},
             {
                 "$pull": {"databases": database_name},
+                "$inc": {"allocated_memory": -database_max_memory}
             },
             session=session,
         )
@@ -59,7 +58,18 @@ def delete_database_by_name(cluster_name: str, database_name: str):
 
 @cluster_connection.handle_exceptions
 def get_database_by_name(cluster_name: str, database_name: str):
-    database = collection.find_one(filter={"cluster_name": cluster_name, "name": database_name})
+    database = collection.find_one(filter={"participating_clusters": {"$in": [cluster_name]}, "name": database_name})
+    if database:
+        return database
+    return None
+
+
+@cluster_connection.handle_exceptions
+def get_database_by_alias(alias_name: str):
+    dot_split = alias_name.split(".")
+    port = int(dot_split[0].split("-")[1])
+    cluster_name = dot_split[1]
+    database = collection.find_one(filter={"participating_clusters": {"$in": [cluster_name]}, "port": port})
     if database:
         return database
     return None

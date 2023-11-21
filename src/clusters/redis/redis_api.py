@@ -22,7 +22,7 @@ async def add_cluster(cluster: RedisCluster = Body(...)):
 async def delete_cluster_by_name(name):
     cluster = redis_cluster.delete_cluster_by_name(name)
     if cluster:
-        cluster['_id'] = str(cluster['_id']) 
+        cluster['_id'] = str(cluster['_id'])
         return JSONResponse(content=jsonable_encoder(cluster), status_code=200)
     else:
         return PlainTextResponse(content="No Cluster Found", status_code=404)
